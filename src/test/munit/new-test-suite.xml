@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="new-test-suite.xml" />
+	<munit:test name="new-test-suite-getCabsTest" doc:id="58ddf53f-ce16-4671-8907-d948bc24058d" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getCabs" doc:id="6cfcb911-7d22-4c28-98ac-223cee865ba9" name="getCabs"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="new-test-suite-postCabsTest" doc:id="8b8787fe-10a1-4fa4-a194-8bc6bf8a52af" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to postCabs" doc:id="5648def2-5956-47d0-ab71-fa5caac047fd" name="postCabs"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="new-test-suite-getOrdersTest" doc:id="6fe12470-3355-45bc-a1eb-6d243b001cff" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getOrders" doc:id="bd83bdbb-b0bd-4a4e-8f67-20c8ee55ecaf" name="getOrders"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="new-test-suite-postOrdersTest" doc:id="df1fc253-1483-448a-9727-92a6579027fd" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to postOrders" doc:id="f713e16c-44eb-41f5-979e-f02883fca75f" name="postOrders"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="new-test-suite-completeOrdersTest" doc:id="abd644d8-5ae2-4b4d-b32c-35734cdae110" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to completeOrders" doc:id="33b85ef3-e06c-4bf7-aff4-82e6823a5817" name="completeOrders"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="new-test-suite-cancelOrdersTest" doc:id="b4dd2789-7955-4529-ad23-87f3d1f08031" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to cancelOrders" doc:id="2ff71e14-3126-466e-a6d5-8138c1ea269b" name="cancelOrders"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="new-test-suite-FileInputFlowTest" doc:id="6c099716-5aab-4e54-8523-55889849e332" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to FileInputFlow" doc:id="9d4e524a-7263-40f7-a0ee-ee0da9a46ef0" name="FileInputFlow"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="new-test-suite-cab_booking_api-mainTest" doc:id="f6fdad14-cf49-44ab-b1da-9da2bc9f25ca" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to cab_booking_api-main" doc:id="c2c2aaa6-97c3-4ed6-a75e-c1ba05b25788" name="cab_booking_api-main"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="new-test-suite-cab_booking_api-consoleTest" doc:id="df0783bc-3692-414a-aeb4-953df82d43aa" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to cab_booking_api-console" doc:id="2751314b-e7f5-471e-8aaf-535cc1f42321" name="cab_booking_api-console"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="new-test-suite-get:\cabs:cab_booking_api-configTest" doc:id="0b039851-fd85-4d03-9b52-ba61e70ebe4a" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\cabs:cab_booking_api-config" doc:id="2c1991eb-757b-46ea-ae6f-9dbc1e623491" name="get:\cabs:cab_booking_api-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="new-test-suite-post:\cabs:application\json:cab_booking_api-configTest" doc:id="c4364273-0d84-48f4-bad5-a827fa2891a7" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\cabs:application\json:cab_booking_api-config" doc:id="0556c1fa-707c-4375-ab19-3d4ffb645fbc" name="post:\cabs:application\json:cab_booking_api-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="new-test-suite-get:\orders:cab_booking_api-configTest" doc:id="66e8a5fa-46d2-4b81-a9a9-0eb5ae2c0329" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\orders:cab_booking_api-config" doc:id="77bfd817-beaa-41ef-9c68-0c59002cb222" name="get:\orders:cab_booking_api-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="new-test-suite-post:\orders:application\json:cab_booking_api-configTest" doc:id="41c4084e-7655-456a-a2f1-ffbce03bbb14" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\orders:application\json:cab_booking_api-config" doc:id="bccaec61-2880-43d2-941e-a896bb3ac73b" name="post:\orders:application\json:cab_booking_api-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="new-test-suite-put:\orders:application\json:cab_booking_api-configTest" doc:id="5d14232b-b135-4b33-ad0f-33bc2e36a6f5" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to put:\orders:application\json:cab_booking_api-config" doc:id="61f5d313-5ac6-4dfb-b711-bc723e3e3265" name="put:\orders:application\json:cab_booking_api-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="new-test-suite-delete:\orders:application\json:cab_booking_api-configTest" doc:id="8315a5cf-e02b-48e5-8256-1acb91290149" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to delete:\orders:application\json:cab_booking_api-config" doc:id="8bb1958a-e3d9-46eb-9843-d3f5dd9d6748" name="delete:\orders:application\json:cab_booking_api-config"/>
+		</munit:execution>
+	</munit:test>
+
+
+</mule>

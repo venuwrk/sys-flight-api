@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<file:config name="File_Config" doc:name="File Config" doc:id="d774d4f8-a302-45b9-be34-ec3360bb328d" >
+		<file:connection workingDir="D:\cab_booking_api\output" />
+	</file:config>
+	<flow name="getCabs" doc:id="cb247777-e76b-4f86-aa4a-5d3141b1708a" >
+		<logger level="INFO" doc:name="Logger" doc:id="cecbb4fd-908f-40de-844a-5ec1dfecd3f3" message="Enter getCabs Flow"/>
+		<db:select doc:name="getCabData" doc:id="1ccaaa38-8144-42d7-8c33-306d9844ec23" config-ref="Database_Config">
+			<db:sql ><![CDATA[SELECT * FROM Cabs 
+WHERE Source = :source 
+AND Destination = :destination]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	'source' : attributes.queryParams.'source' as String,
+	'destination' : attributes.queryParams.'destination' as String
+}]]]></db:input-parameters>
+		</db:select>
+		<choice doc:name="Choice" doc:id="25c318fc-77a1-4081-b12f-0dd371d93c8e" >
+			<when expression="#[isEmpty (payload)]">
+				<ee:transform doc:name="Transform Message" doc:id="f8346e3a-3e05-4c94-a804-a05d8e069c57" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json 
+---
+{
+	"message": "No records found"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="64a96a4e-49bd-4338-9cfb-ebcff48e50b3">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	cab_Id: payload01.Cab_Id,
+	price: payload01.Price,
+	source: payload01.Source,
+	destination: payload01.Destination,
+	cabPartner: payload01.Cab_Partner,
+	booking_status: payload01.Booking_Status,
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="f3e73e1a-91f9-469b-ae6d-990ee11e8976" message="Exit getCabs Flow"/>
+	</flow>
+	<flow name="postCabs" doc:id="5895a3c9-f0d0-4617-8d9f-cff3e12101c4" >
+		<logger level="INFO" doc:name="Logger" doc:id="2d7ed550-6f0c-400d-95d5-8317ca5781c4" message="Enter postCabs Flow"/>
+		<db:insert doc:name="Insert" doc:id="99d3cd71-8202-48e7-8002-c144b34dda09" config-ref="Database_Config">
+					<db:sql><![CDATA[INSERT INTO `Cabs` 
+(`Cab_Id`,`Cab_Partner`, `Source`, `Destination`, `Price`, `Booking_Status`) 
+VALUES (:cab_Id, :cabPartner, :source, :destination, :price, 'Available')]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	'cab_Id' : payload.'cab_Id' as String default 'Invalid Entry',
+'source' : payload.source as String default 'Invalid Entry',
+'destination' : payload.destination as String default 'Invalid Entry',
+'price' : payload.price as Number default 1.000,
+'cabPartner' : payload.cabPartner as String default 'Invalid Entry'
+}]]]></db:input-parameters>
+		</db:insert>
+		<set-payload value="Cab Added in the Record" doc:name="Set Payload" doc:id="fa066a41-68ba-4db2-982c-d68039948656" />
+		<logger level="INFO" doc:name="Logger" doc:id="cf5113f8-07fa-498b-9d1a-6f98a238cd27" message="Exit postCabs Flow"/>
+		<error-handler>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="ba8a01be-b7a9-45c2-8296-d7d31b7e20c5" type="DB:QUERY_EXECUTION">
+				<ee:transform doc:name="Transform Message" doc:id="84f2bdfe-9694-4cf2-82e1-691a4c7153b6">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{	
+	"message" : "Cab_Id already exists"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<set-payload value="Cab_Id already exists" doc:name="Set Payload" doc:id="55867f2e-3935-4a74-b2a3-39657c331a6e" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="getOrders" doc:id="1374a5af-d699-482f-ab09-7c562710d402" >
+		<logger level="INFO" doc:name="Logger" doc:id="1fecd6c3-22de-488b-aec7-b4368d9aeb3a" message="Enter getOrders Flow"/>
+		<db:select doc:name="Select" doc:id="c599a7b9-2710-4426-a9c7-14237a3ca09f" config-ref="Database_Config">
+			<db:sql ><![CDATA[SELECT * FROM Order_Cabs WHERE Order_Id = :order_Id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	'order_Id' : attributes.queryParams.order_Id as Number
+}]]]></db:input-parameters>
+		</db:select>
+		<choice doc:name="Choice" doc:id="da58b271-ff71-49a1-bd29-816a9eb3bed6" >
+			<when expression="#[isEmpty (payload)]">
+				<ee:transform doc:name="Transform Message" doc:id="15f93f2a-8a2e-48ed-9f50-44a82464fdd3" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json 
+---
+{
+	"message": "No records found"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="2eb83db8-5c57-4dbc-acbc-de8b39db2a31">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	order_Id: payload01.Order_Id as Number,
+	cab_Id: payload01.Cab_Id as String,
+	cust_name: payload01.Cust_Name as String,
+	price: payload01.Price as Number,
+	booking_Details: payload01.Booking_Details as String,
+	source: payload01.Source as String,
+	destination: payload01.Destination as String,
+	cabPartner: payload01.Cab_Partner as String,
+	booking_status: payload01.Booking_Status as String
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="eb2b7e4f-9944-4564-a5ea-589c6abfd602" message="Exit getOrders Flow"/>
+	</flow>
+	<flow name="postOrders" doc:id="4c283a61-8947-42c9-8361-6bdc66725a05">
+		<logger level="INFO" doc:name="Logger" doc:id="4b3888bd-1a60-4f46-a635-e9e67a1f01a0" message="Enter postOrders Flow"/>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="97f0636d-c662-4997-ae3f-88ca27b74f67" >
+			<route >
+				<db:insert doc:name="Insert" doc:id="0f30350c-3b8e-424b-9382-86e614037a10" config-ref="Database_Config">
+			<db:sql><![CDATA[INSERT INTO `Order_Cabs` 
+(`Order_Id`, `Cab_Id`, `Cust_Name`, `Price`, `Booking_Details`, `Source`, `Destination`, `Cab_Partner`, `Booking_Status`) 
+VALUES (NULL, :cab_Id, :cust_name, :price, CURRENT_TIMESTAMP, :source, :destination, :cabPartner, 'Booked')
+
+
+]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+'cab_Id' : payload.cab_Id as String ,
+'cust_name' : payload.cust_name as String ,
+'price' : payload.price as Number ,
+'source' : payload.source as String ,
+'destination' : payload.destination as String ,
+'cabPartner' : payload.cabPartner as String 
+}]]]></db:input-parameters>
+		</db:insert>
+			</route>
+			<route >
+				<db:update doc:name="Update" doc:id="80055d93-008b-48a7-8891-d3bac6c8ef8d" config-ref="Database_Config">
+			<db:sql><![CDATA[UPDATE Cabs
+SET 
+	Booking_Status = 'Booked'
+WHERE 
+	Cab_Id = :cab_Id]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+'cab_Id' : payload.cab_Id as String
+}]]]></db:input-parameters>
+		</db:update>
+			</route>
+		</scatter-gather>
+		<db:select doc:name="Select" doc:id="db179dca-cff0-4dbb-8479-5bb19ac310e1" config-ref="Database_Config">
+			<db:sql><![CDATA[select * from Order_Cabs
+ORDER BY Order_Id DESC LIMIT 1]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="d7d278c7-b891-43c0-a120-e4a45d1ec14a">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	order_Id: payload01.Order_Id as Number,
+	cab_Id: payload01.Cab_Id as String,
+	cust_name: payload01.Cust_Name as String,
+	price: payload01.Price as Number,
+	booking_Details: payload01.Booking_Details as String,
+	source: payload01.Source as String,
+	destination: payload01.Destination as String,
+	cabPartner: payload01.Cab_Partner as String,
+	booking_status: payload01.Booking_Status as String
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="9e08d0c1-fc4b-4d8c-a2eb-dd88d7439e2c" message="Exit postOrders Flow" />
+	</flow>
+	<flow name="completeOrders" doc:id="5bdea618-cc16-4e3b-ba28-b4378f89e7e5" >
+		<logger level="INFO" doc:name="Logger" doc:id="c1db78b1-07ad-442c-984f-a4d1e72fa817" message="Enter completeOrder Flow"/>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="926944ae-151f-48fb-82da-c36120efab6a" >
+			<route >
+				<db:update doc:name="Update" doc:id="86f12630-b6fa-4b2e-bd1f-678c4945dfc2" config-ref="Database_Config">
+					<db:sql ><![CDATA[UPDATE Order_Cabs 
+SET 
+    Booking_Status = 'Completed'
+WHERE
+    Order_Id = :order_Id;
+]]></db:sql>
+					<db:input-parameters ><![CDATA[#[{
+	'order_Id' : payload.order_Id 
+}]]]></db:input-parameters>
+				</db:update>
+			</route>
+			<route >
+				<db:update doc:name="Update" doc:id="da306c08-181d-4809-a1d3-93a0f5696813" config-ref="Database_Config">
+					<db:sql ><![CDATA[UPDATE Cabs
+SET 
+	Booking_Status = "Available"
+WHERE 
+	Cab_Id = :cab_Id]]></db:sql>
+					<db:input-parameters ><![CDATA[#[{
+	'cab_Id' : payload.cab_Id as String 
+}]]]></db:input-parameters>
+				</db:update>
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="Transform Message" doc:id="49c30157-6f81-40dd-a476-8d37b4f0930a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+	payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-payload value="Booking Completed" doc:name="Set Payload" doc:id="632b0c4b-5dd5-4228-8018-17c3b051a28f" />
+		<logger level="INFO" doc:name="Logger" doc:id="97420c66-5a8c-4f68-a59a-6523c3ff4381" message="Exit completeOrder Flow"/>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="677ca298-a95d-4121-8bae-6fd8a5acd04d" type="ANY">
+				<ee:transform doc:name="Transform Message" doc:id="09f3e317-3a77-4fa8-9979-714afdab957b" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "Required fields not found"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="cancelOrders" doc:id="ca18659f-e874-4d1c-9ebc-c2e0ae567d0e" >
+		<logger level="INFO" doc:name="Logger" doc:id="37f30f5d-e5fb-403a-b6b3-9f0f88b2368b" message="Enter cancelOrder Flow"/>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="711780a1-60c9-4277-8083-3aae7545005b" >
+			<route >
+				<db:update doc:name="Update" doc:id="8943aa92-b7a8-4719-9909-6fea074fec0e" config-ref="Database_Config" >
+					<db:sql ><![CDATA[UPDATE Order_Cabs 
+SET 
+    Booking_Status = 'Cancelled'
+WHERE
+    Order_Id = :order_Id;
+    
+
+    
+]]></db:sql>
+					<db:input-parameters ><![CDATA[#[{
+	'order_Id' : payload.order_Id
+}]]]></db:input-parameters>
+				</db:update>
+			</route>
+			<route >
+				<db:update doc:name="Update" doc:id="7db64034-aa24-45a5-bae6-1343c315844c" config-ref="Database_Config">
+					<db:sql ><![CDATA[UPDATE Cabs
+SET 
+	Booking_Status = 'Available'
+WHERE 
+	Cab_Id = :cab_Id]]></db:sql>
+					<db:input-parameters ><![CDATA[#[{
+	'cab_Id' : payload.cab_Id as String 
+}]]]></db:input-parameters>
+				</db:update>
+			</route>
+		</scatter-gather>
+		<set-payload value="Booking Cancelled" doc:name="Set Payload" doc:id="16aebb70-f818-4cd8-a29b-9a4a33cd9aa0" />
+		<logger level="INFO" doc:name="Logger" doc:id="8a157f6e-53a9-420a-a6cc-7cfb76a00f9f" message="Exit cancelOrder Flow" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="877d6315-50c6-40aa-8033-178b1e580231" type="ANY">
+				<ee:transform doc:name="Transform Message" doc:id="ed8ba270-faa2-484d-9135-85341d7c1e0e" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "Required fields not found"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="FileInputFlow" doc:id="90c5b3d8-25ff-45ff-8d99-58e52558eaf9" >
+		<scheduler doc:name="Scheduler" doc:id="b6caacfd-99fa-465c-be7e-396e94a863a7" >
+			<scheduling-strategy >
+				<fixed-frequency startDelay="5" timeUnit="SECONDS"/>
+			</scheduling-strategy>
+		</scheduler>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="464538c0-2f3e-4c4b-8c9a-d6fec80f53c0" >
+			<route >
+				<db:select doc:name="Uber" doc:id="a94431ba-f1b1-4b25-a0a4-5e54b7fceb63" config-ref="Database_Config">
+			<db:sql><![CDATA[SELECT * FROM Order_Cabs
+WHERE 
+Cab_Partner = 'Uber']]></db:sql>
+		</db:select>
+				<ee:transform doc:name="Transform Message" doc:id="1e3af754-29f1-4cd1-953e-6f7f281d7ab1">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+	payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+				<file:write doc:name="Write" doc:id="619a644f-a153-44f0-b23f-e3aeb8b9bc1e" config-ref="File_Config" path="D:\cab_booking_api\output\UberPartner.txt"/>
+			</route>
+			<route >
+				<db:select doc:name="Ola" doc:id="6b6ec45f-163f-4b3f-991b-a1b9f0976b00" config-ref="Database_Config">
+			<db:sql><![CDATA[SELECT * FROM Order_Cabs
+WHERE 
+Cab_Partner = 'Ola']]></db:sql>
+		</db:select>
+				<ee:transform doc:name="Transform Message" doc:id="74d0106a-2201-43a1-990a-de60953c63d3" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+	payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<file:write doc:name="Write" doc:id="0816130c-0458-42f0-b147-25b62c2942d9" config-ref="File_Config" path="D:\cab_booking_api\output\OlaPartner.txt"/>
+			</route>
+		</scatter-gather>
+	</flow>
+</mule>

@@ -1,0 +1,24 @@
+[{
+	"ID": 1, 
+    "code": "CAB_90764",
+    "price": 400,
+    "bookingDate": "2017/07/24",
+    "bookingTime": "23:04:67",
+    "source": "Bangalore",
+    "destination": "Chennai",
+    "cabPartner": "Ola",
+    "emptyCabs": 0, 
+    "totalCabs": 80
+},{
+	"ID": 2,
+    "code": "CAB_90745",
+    "price": 567,
+    "bookingDate": "2017/07/22",
+    "bookingTime": "23:04:68",
+    "source": "Bengal",
+    "destination": "Coimbatore",
+    "cabPartner": "Uber",
+    "emptyCabs": 0, 
+    "totalCabs": 45
+}
+]
