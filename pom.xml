@@ -136,7 +136,7 @@
 		<dependency>
 			<groupId>0c6545d5-ff1e-4a7f-818a-0e4b0af955d0</groupId>
 			<artifactId>car_booking_api</artifactId>
-			<version>2.0.20</version>
+			<version>2.0.21</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>
