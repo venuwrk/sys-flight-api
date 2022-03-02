@@ -44,7 +44,6 @@
 						<workerType>${vCore}</workerType>
 						<objectStoreV2>true</objectStoreV2>
 					</cloudHubDeployment>
-					<classifier>mule-application</classifier>
 					<sharedLibraries>
 						<sharedLibrary>
 							<groupId>mysql</groupId>
