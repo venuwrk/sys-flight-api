@@ -32,19 +32,19 @@
 				<extensions>true</extensions>
 				<configuration>
 					<cloudHubDeployment>
-      					<uri>https://anypoint.mulesoft.com</uri>
-      					<muleVersion>${mule.version}</muleVersion>
-      					<username>${anypoint.username}</username>
-      					<password>${anypoint.password}</password>
-      					<applicationName>${appname}</applicationName>
-      					<environment>${env}</environment>
-      					<region>${region}</region>
-      					<workers>${workers}</workers>
-      					<businessGroup>${business}</businessGroup>
-      					<workerType>${vCore}</workerType>
-      					<objectStoreV2>true</objectStoreV2>
-    				</cloudHubDeployment>
-    				<classifier>mule-application</classifier>
+						<uri>https://anypoint.mulesoft.com</uri>
+						<muleVersion>${mule.version}</muleVersion>
+						<username>${anypoint.username}</username>
+						<password>${anypoint.password}</password>
+						<applicationName>${appname}</applicationName>
+						<environment>${env}</environment>
+						<region>${region}</region>
+						<workers>${workers}</workers>
+						<businessGroup>${business}</businessGroup>
+						<workerType>${vCore}</workerType>
+						<objectStoreV2>true</objectStoreV2>
+					</cloudHubDeployment>
+					<classifier>mule-application</classifier>
 					<sharedLibraries>
 						<sharedLibrary>
 							<groupId>mysql</groupId>
@@ -110,13 +110,6 @@
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
-			<groupId>0c6545d5-ff1e-4a7f-818a-0e4b0af955d0</groupId>
-			<artifactId>car_booking_api</artifactId>
-			<version>2.0.19</version>
-			<classifier>raml</classifier>
-			<type>zip</type>
-		</dependency>
-		<dependency>
 			<groupId>com.mulesoft.munit</groupId>
 			<artifactId>munit-runner</artifactId>
 			<version>2.3.6</version>
@@ -140,6 +133,13 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.16</version>
+		</dependency>
+		<dependency>
+			<groupId>0c6545d5-ff1e-4a7f-818a-0e4b0af955d0</groupId>
+			<artifactId>car_booking_api</artifactId>
+			<version>2.0.20</version>
+			<classifier>raml</classifier>
+			<type>zip</type>
 		</dependency>
 	</dependencies>
 
