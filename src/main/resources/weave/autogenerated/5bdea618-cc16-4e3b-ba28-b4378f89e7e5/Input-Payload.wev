@@ -1,0 +1,8 @@
+%dw 2.0
+
+type auto_5bdea618_cc16_4e3b_ba28_b4378f89e7e5_Input_Payload = {
+  cab_Id: String, 
+  order_Id?: Number, 
+  _?: Any
+}
+
