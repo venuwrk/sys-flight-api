@@ -1,0 +1,57 @@
+[
+  {
+    "Cab_Id": "CAB_90905",
+    "Price": 40009.0,
+    "Destination": "Muradabad",
+    "Cust_Name": "Ajay",
+    "Booking_Details": "2022-02-28T21:40:18",
+    "Booking_Status": "Booked",
+    "Source": "Amravati",
+    "Order_Id": 2,
+    "Cab_Partner": "Uber"
+  },
+  {
+    "Cab_Id": "CAB_90791",
+    "Price": 4950.0,
+    "Destination": "Banaras",
+    "Cust_Name": "Suresh",
+    "Booking_Details": "2022-02-28T21:45:38",
+    "Booking_Status": "Cancelled",
+    "Source": "Patna",
+    "Order_Id": 3,
+    "Cab_Partner": "Uber"
+  },
+  {
+    "Cab_Id": "CAB_90905",
+    "Price": 40009.0,
+    "Destination": "Muradabad",
+    "Cust_Name": "Ramesh",
+    "Booking_Details": "2022-02-28T21:53:13",
+    "Booking_Status": "Booked",
+    "Source": "Amravati",
+    "Order_Id": 5,
+    "Cab_Partner": "Uber"
+  },
+  {
+    "Cab_Id": "CAB_90905",
+    "Price": 40009.0,
+    "Destination": "Muradabad",
+    "Cust_Name": "Ajay",
+    "Booking_Details": "2022-02-28T21:57:12",
+    "Booking_Status": "Completed",
+    "Source": "Amravati",
+    "Order_Id": 6,
+    "Cab_Partner": "Uber"
+  },
+  {
+    "Cab_Id": "CAB_90790",
+    "Price": 495.0,
+    "Destination": "Aarah",
+    "Cust_Name": "Shivam",
+    "Booking_Details": "2022-02-28T21:59:41",
+    "Booking_Status": "Completed",
+    "Source": "Patna",
+    "Order_Id": 7,
+    "Cab_Partner": "Uber"
+  }
+]

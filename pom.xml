@@ -44,6 +44,12 @@
 						<workerType>${vCore}</workerType>
 						<objectStoreV2>true</objectStoreV2>
 					</cloudHubDeployment>
+					<sharedLibraries>
+						<sharedLibrary>
+							<groupId>mysql</groupId>
+							<artifactId>mysql-connector-java</artifactId>
+						</sharedLibrary>
+					</sharedLibraries>
 				</configuration>
 			</plugin>
 			<plugin>

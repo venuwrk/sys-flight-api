@@ -41,12 +41,12 @@ output application/json
 output application/json
 ---
 payload map ( payload01 , indexOfPayload01 ) -> {
-	cab_Id: payload01.Cab_Id,
+	cabId: payload01.Cab_Id,
 	price: payload01.Price,
 	source: payload01.Source,
 	destination: payload01.Destination,
 	cabPartner: payload01.Cab_Partner,
-	booking_status: payload01.Booking_Status,
+	bookingStatus: payload01.Booking_Status
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
@@ -59,9 +59,9 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 		<db:insert doc:name="Insert" doc:id="99d3cd71-8202-48e7-8002-c144b34dda09" config-ref="Database_Config">
 					<db:sql><![CDATA[INSERT INTO `Cabs` 
 (`Cab_Id`,`Cab_Partner`, `Source`, `Destination`, `Price`, `Booking_Status`) 
-VALUES (:cab_Id, :cabPartner, :source, :destination, :price, 'Available')]]></db:sql>
+VALUES (:cabId, :cabPartner, :source, :destination, :price, 'Available')]]></db:sql>
 			<db:input-parameters><![CDATA[#[{
-	'cab_Id' : payload.'cab_Id' as String default 'Invalid Entry',
+	'cabId' : payload.'cabId' as String default 'Invalid Entry',
 'source' : payload.source as String default 'Invalid Entry',
 'destination' : payload.destination as String default 'Invalid Entry',
 'price' : payload.price as Number default 1.000,
@@ -89,9 +89,9 @@ output application/json
 	<flow name="getOrders" doc:id="1374a5af-d699-482f-ab09-7c562710d402" >
 		<logger level="INFO" doc:name="Logger" doc:id="1fecd6c3-22de-488b-aec7-b4368d9aeb3a" message="Enter getOrders Flow"/>
 		<db:select doc:name="Select" doc:id="c599a7b9-2710-4426-a9c7-14237a3ca09f" config-ref="Database_Config">
-			<db:sql ><![CDATA[SELECT * FROM Order_Cabs WHERE Order_Id = :order_Id]]></db:sql>
+			<db:sql ><![CDATA[SELECT * FROM Order_Cabs WHERE Order_Id = :orderId]]></db:sql>
 			<db:input-parameters ><![CDATA[#[{
-	'order_Id' : attributes.queryParams.order_Id as Number
+	'orderId' : attributes.queryParams.orderId as Number
 }]]]></db:input-parameters>
 		</db:select>
 		<choice doc:name="Choice" doc:id="da58b271-ff71-49a1-bd29-816a9eb3bed6" >
@@ -114,15 +114,15 @@ output application/json
 output application/json
 ---
 payload map ( payload01 , indexOfPayload01 ) -> {
-	order_Id: payload01.Order_Id as Number,
-	cab_Id: payload01.Cab_Id as String,
-	cust_name: payload01.Cust_Name as String,
-	price: payload01.Price as Number,
-	booking_Details: payload01.Booking_Details as String,
-	source: payload01.Source as String,
-	destination: payload01.Destination as String,
-	cabPartner: payload01.Cab_Partner as String,
-	booking_status: payload01.Booking_Status as String
+	orderId: payload01.Order_Id,
+	cabId: payload01.Cab_Id,
+	custName: payload01.Cust_Name,
+	price: payload01.Price,
+	bookingDetails: payload01.Booking_Details as String,
+	source: payload01.Source,
+	destination: payload01.Destination,
+	cabPartner: payload01.Cab_Partner,
+	bookingStatus: payload01.Booking_Status
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
@@ -137,13 +137,13 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 				<db:insert doc:name="Insert" doc:id="0f30350c-3b8e-424b-9382-86e614037a10" config-ref="Database_Config">
 			<db:sql><![CDATA[INSERT INTO `Order_Cabs` 
 (`Order_Id`, `Cab_Id`, `Cust_Name`, `Price`, `Booking_Details`, `Source`, `Destination`, `Cab_Partner`, `Booking_Status`) 
-VALUES (NULL, :cab_Id, :cust_name, :price, CURRENT_TIMESTAMP, :source, :destination, :cabPartner, 'Booked')
+VALUES (NULL, :cabId, :custName, :price, CURRENT_TIMESTAMP, :source, :destination, :cabPartner, 'Booked')
 
 
 ]]></db:sql>
 			<db:input-parameters><![CDATA[#[{
-'cab_Id' : payload.cab_Id as String ,
-'cust_name' : payload.cust_name as String ,
+'cabId' : payload.cabId as String ,
+'custName' : payload.custName as String ,
 'price' : payload.price as Number ,
 'source' : payload.source as String ,
 'destination' : payload.destination as String ,
@@ -157,9 +157,9 @@ VALUES (NULL, :cab_Id, :cust_name, :price, CURRENT_TIMESTAMP, :source, :destinat
 SET 
 	Booking_Status = 'Booked'
 WHERE 
-	Cab_Id = :cab_Id]]></db:sql>
+	Cab_Id = :cabId]]></db:sql>
 			<db:input-parameters><![CDATA[#[{
-'cab_Id' : payload.cab_Id as String
+'cabId' : payload.cabId as String
 }]]]></db:input-parameters>
 		</db:update>
 			</route>
@@ -174,15 +174,15 @@ ORDER BY Order_Id DESC LIMIT 1]]></db:sql>
 output application/json
 ---
 payload map ( payload01 , indexOfPayload01 ) -> {
-	order_Id: payload01.Order_Id as Number,
-	cab_Id: payload01.Cab_Id as String,
-	cust_name: payload01.Cust_Name as String,
-	price: payload01.Price as Number,
-	booking_Details: payload01.Booking_Details as String,
-	source: payload01.Source as String,
-	destination: payload01.Destination as String,
-	cabPartner: payload01.Cab_Partner as String,
-	booking_status: payload01.Booking_Status as String
+	orderId: payload01.Order_Id,
+	cabId: payload01.Cab_Id,
+	custName: payload01.Cust_Name,
+	price: payload01.Price,
+	bookingDetails: payload01.Booking_Details as String,
+	source: payload01.Source,
+	destination: payload01.Destination,
+	cabPartner: payload01.Cab_Partner,
+	bookingStatus: payload01.Booking_Status
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
@@ -197,10 +197,10 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 SET 
     Booking_Status = 'Completed'
 WHERE
-    Order_Id = :order_Id;
+    Order_Id = :orderId;
 ]]></db:sql>
 					<db:input-parameters ><![CDATA[#[{
-	'order_Id' : payload.order_Id 
+	'orderId' : payload.orderId 
 }]]]></db:input-parameters>
 				</db:update>
 			</route>
@@ -210,9 +210,9 @@ WHERE
 SET 
 	Booking_Status = "Available"
 WHERE 
-	Cab_Id = :cab_Id]]></db:sql>
+	Cab_Id = :cabId]]></db:sql>
 					<db:input-parameters ><![CDATA[#[{
-	'cab_Id' : payload.cab_Id as String 
+	'cabId' : payload.cabId as String 
 }]]]></db:input-parameters>
 				</db:update>
 			</route>
@@ -251,13 +251,13 @@ output application/json
 SET 
     Booking_Status = 'Cancelled'
 WHERE
-    Order_Id = :order_Id;
+    Order_Id = :orderId;
     
 
     
 ]]></db:sql>
 					<db:input-parameters ><![CDATA[#[{
-	'order_Id' : payload.order_Id
+	'orderId' : payload.orderId
 }]]]></db:input-parameters>
 				</db:update>
 			</route>
@@ -267,9 +267,9 @@ WHERE
 SET 
 	Booking_Status = 'Available'
 WHERE 
-	Cab_Id = :cab_Id]]></db:sql>
+	Cab_Id = :cabId]]></db:sql>
 					<db:input-parameters ><![CDATA[#[{
-	'cab_Id' : payload.cab_Id as String 
+	'cabId' : payload.cabId as String 
 }]]]></db:input-parameters>
 				</db:update>
 			</route>
@@ -312,7 +312,7 @@ output application/json
 	payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-				<file:write doc:name="Write" doc:id="619a644f-a153-44f0-b23f-e3aeb8b9bc1e" config-ref="File_Config" path="D:\cab_booking_api\output\UberPartner.txt"/>
+				<file:write doc:name="Write" doc:id="619a644f-a153-44f0-b23f-e3aeb8b9bc1e" config-ref="File_Config" path="C:\Users\venusgopal\AnypointStudio\studio-workspace\cabSysApi\output\UberPartner.txt"/>
 			</route>
 			<route >
 				<db:select doc:name="Ola" doc:id="6b6ec45f-163f-4b3f-991b-a1b9f0976b00" config-ref="Database_Config">
@@ -328,7 +328,7 @@ output application/json
 	payload]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
-				<file:write doc:name="Write" doc:id="0816130c-0458-42f0-b147-25b62c2942d9" config-ref="File_Config" path="D:\cab_booking_api\output\OlaPartner.txt"/>
+				<file:write doc:name="Write" doc:id="0816130c-0458-42f0-b147-25b62c2942d9" config-ref="File_Config" path="C:\Users\venusgopal\AnypointStudio\studio-workspace\cabSysApi\output\OlaPartner.txt"/>
 			</route>
 		</scatter-gather>
 	</flow>
