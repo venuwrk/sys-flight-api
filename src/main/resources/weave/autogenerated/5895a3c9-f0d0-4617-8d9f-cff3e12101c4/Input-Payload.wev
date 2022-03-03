@@ -1,12 +1,11 @@
 %dw 2.0
 
 type auto_5895a3c9_f0d0_4617_8d9f_cff3e12101c4_Input_Payload = {
-  cab_Id: String, 
   price: Number, 
   destination: String, 
   cabPartner: String, 
-  booking_status: String, 
   source: String, 
+  cabId: String, 
   _?: Any
 }
 

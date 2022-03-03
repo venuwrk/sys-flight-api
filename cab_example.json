@@ -1,0 +1,22 @@
+[{
+	"orderId": 1, 
+    "cabId": "CAB_90764",
+	"custName": "Vijay",
+    "price": 400,
+    "bookingDetails": "23:04:67,2017/07/24",
+    "source": "Bangalore",
+    "destination": "Chennai",
+    "cabPartner": "Ola",
+    "bookingStatus": "No"
+},{
+	"orderId": 2,
+    "cabId": "CAB_90745",
+	"custName": "Ajay",
+    "price": 567,
+    "bookingDetails": "23:04:67,2017/07/24",
+    "source": "Bengal",
+    "destination": "Coimbatore",
+    "cabPartner": "Uber",
+    "bookingStatus": "Yes"
+}
+]
